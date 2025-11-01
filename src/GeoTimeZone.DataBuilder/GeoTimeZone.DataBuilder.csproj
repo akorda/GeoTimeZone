@@ -7,8 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NetTopologySuite" Version="2.6.0" />
+    <PackageReference Include="Joveler.Compression.XZ" Version="5.0.2" />
     <PackageReference Include="NetTopologySuite.IO.Esri.ShapeFile" Version="1.2.0" />
+    <PackageReference Include="NetTopologySuite" Version="2.6.0" />
   </ItemGroup>
 
 </Project>

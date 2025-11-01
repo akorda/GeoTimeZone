@@ -1,9 +1,19 @@
-using System.IO.Compression;
+using Joveler.Compression.XZ;
 
 namespace GeoTimeZone;
 
 internal static class TimezoneFileReader
 {
+    public static bool IsXZInitialized;
+    static TimezoneFileReader()
+    {
+        if (!IsXZInitialized)
+        {
+            XZInit.GlobalInit();
+            IsXZInitialized = true;
+        }
+    }
+
     private const int LineLength = 8;
     private const int LineEndLength = 1;
 
@@ -13,8 +23,8 @@ internal static class TimezoneFileReader
     private static MemoryStream LoadData()
     {
         var assembly = typeof(TimezoneFileReader).Assembly;
-        using var compressedStream = assembly.GetManifestResourceStream("GeoTimeZone.TZ.dat.gz");
-        using var stream = new GZipStream(compressedStream!, CompressionMode.Decompress);
+        using var compressedStream = assembly.GetManifestResourceStream("GeoTimeZone.TZ.dat.xz");
+        using var stream = new XZStream(compressedStream!, new XZDecompressOptions());
 
         var ms = new MemoryStream();
         stream.CopyTo(ms);
@@ -22,7 +32,7 @@ internal static class TimezoneFileReader
         return ms;
     }
 
-    private static int GetCount() => (int) (LazyData.Value.Length / (LineLength + LineEndLength));
+    private static int GetCount() => (int)(LazyData.Value.Length / (LineLength + LineEndLength));
 
     public static int Count => LazyCount.Value;
 

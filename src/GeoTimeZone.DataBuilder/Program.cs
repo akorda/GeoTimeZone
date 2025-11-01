@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using System.Net.Http;
 using System.Reflection;
+using Joveler.Compression.XZ;
 
 namespace GeoTimeZone.DataBuilder;
 
@@ -8,6 +9,7 @@ internal static class Program
 {
     private static async Task Main()
     {
+        XZInit.GlobalInit();
         ConsoleOutput.Start();
 
         ConsoleOutput.WriteMessage("Downloading Time Zone Boundaries Shapefile");

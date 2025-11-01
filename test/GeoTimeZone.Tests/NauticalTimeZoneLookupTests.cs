@@ -1,3 +1,5 @@
+using System.Net;
+
 namespace GeoTimeZone.Tests;
 
 public class NauticalTimeZoneLookupTests

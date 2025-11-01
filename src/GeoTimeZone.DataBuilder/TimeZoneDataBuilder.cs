@@ -1,4 +1,4 @@
-using System.IO.Compression;
+using Joveler.Compression.XZ;
 using NetTopologySuite.Geometries;
 
 namespace GeoTimeZone.DataBuilder;
@@ -9,8 +9,8 @@ public static class TimeZoneDataBuilder
     private static readonly TimeZoneTreeNode WorldBoundsTreeNode = new();
     private static readonly Dictionary<string, TimeZoneMeta> TimeZones = new();
 
-    private const string DataFileName = "TZ.dat.gz";
-    private const string LookupFileName = "TZL.dat.gz";
+    private const string DataFileName = "TZ.dat.xz";
+    private const string LookupFileName = "TZL.dat.xz";
 
     private static readonly Dictionary<string, string> Overrides = new(StringComparer.Ordinal)
     {
@@ -23,8 +23,8 @@ public static class TimeZoneDataBuilder
         var path = Path.Combine(outputPath, LookupFileName);
 
         using var fileStream = File.Create(path);
-        using var compressedStream = new GZipStream(fileStream, CompressionMode.Compress);
-        using var writer = new StreamWriter(compressedStream) {NewLine = "\n"};
+        using var compressedStream = new XZStream(fileStream, new XZCompressOptions());
+        using var writer = new StreamWriter(compressedStream) { NewLine = "\n" };
 
         var timeZones = TimeZones.Values.OrderBy(x => x.LineNumber);
         foreach (var timeZone in timeZones)
@@ -44,8 +44,8 @@ public static class TimeZoneDataBuilder
         var path = Path.Combine(outputPath, DataFileName);
 
         using var fileStream = File.Create(path);
-        using var compressedStream = new GZipStream(fileStream, CompressionMode.Compress);
-        using var writer = new StreamWriter(compressedStream) {NewLine = "\n"};
+        using var compressedStream = new XZStream(fileStream, new XZCompressOptions());
+        using var writer = new StreamWriter(compressedStream) { NewLine = "\n" };
         WriteTreeNode(writer, WorldBoundsTreeNode);
     }
 
@@ -100,7 +100,7 @@ public static class TimeZoneDataBuilder
         // Test a set of evenly distributed points within the envelope.
         var points = GetTestPoints(node.Envelope);
         var hits = points.Count(p => preparedGeometry.Contains(p));
-        return (double) hits / points.Length;
+        return (double)hits / points.Length;
 
         // Here's how we can do it with area, but it's very slow.
         // return feature.Geometry.Intersection(nodeGeometry).Area / node.Envelope.Area;
@@ -163,7 +163,7 @@ public static class TimeZoneDataBuilder
                         new TimeZoneFeature(x.TimeZoneName, geometry, index));
                 }
 
-                return new[] {x};
+                return new[] { x };
             })
             .Where(x => x.Geometry.Area > 0)
             .OrderBy(x => x.TimeZoneName).ThenBy(x => x.MultiPolyIndex)
