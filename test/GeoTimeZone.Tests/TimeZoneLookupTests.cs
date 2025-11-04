@@ -1,7 +1,14 @@
+using Xunit.Abstractions;
+
 namespace GeoTimeZone.Tests;
 
 public class TimeZoneLookupTests
 {
+    public TimeZoneLookupTests(ITestOutputHelper outputHelper)
+    {
+        outputHelper.WriteLine($"Running '{nameof(TimeZoneLookupTests)}' for Precision {TimeZoneLookup.Precision}");
+    }
+
     [Fact]
     public void Can_Lookup_TimeZone_PaigntonPier()
     {

@@ -4,7 +4,10 @@
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(GeoTimeZonePrecision)' == '5' OR '$(GeoTimeZonePrecision)' == ''">
+    <ProjectReference Include="..\..\src\GeoTimeZone\GeoTimeZone.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(GeoTimeZonePrecision)' == '6' ">
     <ProjectReference Include="..\..\src\GeoTimeZone6\GeoTimeZone6.csproj" />
   </ItemGroup>
 

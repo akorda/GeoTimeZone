@@ -1,7 +1,14 @@
+using Xunit.Abstractions;
+
 namespace GeoTimeZone.Tests;
 
 public class NauticalTimeZoneLookupTests
 {
+    public NauticalTimeZoneLookupTests(ITestOutputHelper outputHelper)
+    {
+        outputHelper.WriteLine($"Running '{nameof(TimeZoneLookupTests)}' for Precision {TimeZoneLookup.Precision}");
+    }
+
     [Fact]
     public void Can_Lookup_Offset_TitanticWreck()
     {
